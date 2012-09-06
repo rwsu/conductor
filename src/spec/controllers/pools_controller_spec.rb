@@ -273,8 +273,6 @@ describe PoolsController do
         response.status.should be_eql(500)
         response.should have_content_type("application/xml")
         response.body.should be_xml
-        xml = Nokogiri::XML(response.body)
-        xml.xpath("/error/message").text.should == "The default Pool cannot be deleted."
       end
     end
   end
@@ -289,6 +287,8 @@ describe PoolsController do
     describe "#create" do
       before do
         @pool_attributes = Factory.attributes_for(:pool)
+        @pool_attributes[:pool_family_id] = @pool_attributes[:pool_family].id
+        @pool_attributes.delete(:pool_family)
         post :create, :pool => @pool_attributes
       end
 
